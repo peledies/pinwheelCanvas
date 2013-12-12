@@ -1,0 +1,21 @@
+{
+  "name": "pinwheelCanvas",
+  "version": "0.0.0",
+  "homepage": "https://github.com/peledies/pinwheelCanvas",
+  "authors": [
+    "Deac <deac@sdicg.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-ui": "~1.10.3",
+    "hammerjs": "~1.0.5"
+  }
+}

@@ -1,0 +1,193 @@
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Pinwheel Spinner Tool</title>
+	<head>
+<meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no, width = device-width">
+	<link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.css">
+	<script src="bower_components/jquery/jquery.js"></script>
+	<script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+	
+	<style type="text/css" media="screen">
+		body { background:#595; }
+		canvas { display:block; }
+		.slider { float:left; }
+		.ammount { min-width:25px; float:left;padding-right:7px; }
+		fieldset { float:left; padding:25px; clear:both; }
+		.ccw-box { float:left; clear:both; }
+		.options { float:left; margin:0 5px;}
+	</style>
+	<script type="text/javascript" charset="utf-8">
+$(function() {
+	$( "#slider-1" ).slider({
+		orientation: "vertical",
+		range: "min",
+		min: 0,
+		max: 256,
+		value: img1.speed,
+		slide: function( event, ui ) {
+			$( "#amount-1" ).html( ui.value );
+		},
+		change: function( event, ui ) {
+			img1.speed = ui.value;
+			draw();
+		}
+	});
+	$( "#slider-2" ).slider({
+		orientation: "vertical",
+		range: "min",
+		min: 0,
+		max: 256,
+		value: img2.speed,
+		slide: function( event, ui ) {
+			$( "#amount-2" ).html( ui.value );
+		},
+		change: function( event, ui ) {
+			img2.speed = ui.value;
+			draw();
+		}
+	});
+	$( "#slider-3" ).slider({
+		orientation: "vertical",
+		range: "min",
+		min: 0,
+		max: 256,
+		value: img3.speed,
+		slide: function( event, ui ) {
+			$( "#amount-3" ).html( ui.value );
+		},
+		change: function( event, ui ) {
+			img3.speed = ui.value;
+			draw();
+		}
+	});
+	$( "#slider-4" ).slider({
+		orientation: "vertical",
+		range: "min",
+		min: 0,
+		max: 256,
+		value: img4.speed,
+		slide: function( event, ui ) {
+			$( "#amount-4" ).html( ui.value );
+		},
+		change: function( event, ui ) {
+			img4.speed = ui.value;
+			draw();
+		}
+	});
+	$( "#amount-1" ).html( $( "#slider-1" ).slider( "value" ) );
+	$( "#amount-2" ).html( $( "#slider-2" ).slider( "value" ) );
+	$( "#amount-3" ).html( $( "#slider-3" ).slider( "value" ) );
+	$( "#amount-4" ).html( $( "#slider-4" ).slider( "value" ) );
+});
+		var pattern = 'spinner'; //'spinner','bloom','orbit'
+		var imageSize = 200;
+
+		var img1 = new Image();
+		var img2 = new Image();
+		var img3 = new Image();
+		var img4 = new Image();
+		
+		var images = [img1,img2,img3,img4];
+		
+		//console.warn(images);
+
+		function draw() { 
+			var canvas = document.getElementById('spinner');
+			document.getElementById("pattern").innerHTML=pattern;
+			document.getElementById("ccw-1").checked=!img1.ccw;
+			document.getElementById("ccw-2").checked=!img2.ccw;
+			document.getElementById("ccw-3").checked=!img3.ccw;
+			document.getElementById("ccw-4").checked=!img4.ccw;
+
+			var context = canvas.getContext('2d');
+			canvas.width = imageSize*2;
+			canvas.height = imageSize*2;    
+			context.clearRect(0,0,canvas.width,canvas.height); // clear canvas  
+			for(key in images){
+				//drawRotated(images[key], ctx, images[key].ccw, images[key].speed);
+				var image = images[key];
+				var time = new Date();
+				context.save();  
+				context.translate(canvas.width/2,canvas.height/2);
+				if(image.ccw){
+					context.rotate(-((image.speed*Math.PI)/60)*time.getSeconds() - ((image.speed*Math.PI)/60000)*time.getMilliseconds());
+				}else{
+					context.rotate(((image.speed*Math.PI)/60)*time.getSeconds() + ((image.speed*Math.PI)/60000)*time.getMilliseconds());
+				}
+				if(pattern == 'orbit'){
+					context.drawImage(image,-image.size/4,-image.size/4,image.size,image.size);  
+				}
+				else if (pattern == 'spinner'){
+					context.drawImage(image,-image.size/2,-image.size/2,image.size,image.size);  
+				}
+				else if (pattern == 'bloom'){
+					context.drawImage(image,-image.size/1.5,-image.size/1.5,image.size,image.size);  
+				}
+				context.restore();
+			}
+		};
+		function setPattern(newPattern){
+			pattern = newPattern;
+			setInterval(draw);
+			document.getElementById("pattern").innerHTML=newPattern;
+		}
+		function toggleCCW(e){
+			var e = eval(e);
+			e.ccw = !e.ccw;
+			console.warn(e);
+		}
+		img1.src = 'slice-1.png'; //img
+		img1.size = imageSize; //square
+		img1.ccw = true; //counter clockwise
+		img1.speed = 16;
+
+		img2.src = 'slice-2.png';
+		img2.size = imageSize;
+		img2.ccw = false;
+		img2.speed = 32;
+
+		img3.src = 'slice-3.png';
+		img3.size = imageSize;
+		img3.ccw = true;
+		img3.speed = 64;
+
+		img4.src = 'slice-4.png';
+		img4.size = imageSize;
+		img4.ccw = false;
+		img4.speed = 128;
+
+		setInterval(draw);
+	</script>
+</head>
+<body>
+	<h3 id='pattern'></h3>
+	<canvas id='spinner'></canvas>
+	<div class="options">
+	<button onclick="setPattern('spinner')">spinner</button>
+	<button onclick="setPattern('bloom')">bloom</button>
+	<button onclick="setPattern('orbit')">orbit</button>
+	</div>
+	<fieldset>
+		<legend>Rotation Options</legend>
+		<div class='options'>
+			<div class="ammount" id="amount-1" style="border:0; color:green; font-weight:bold;"></div>
+			<div class="slider" id="slider-1"></div>
+			<label class="ccw-box" for="">clockwise<input onclick="toggleCCW('img1')" id="ccw-1" type="checkbox" /></label>
+		</div>
+		<div class='options'>
+			<div class="ammount" id="amount-2" style="border:0; color:orange; font-weight:bold;"></div>
+			<div class="slider" id="slider-2"></div>
+			<label class="ccw-box" for="">clockwise<input onclick="toggleCCW('img2')" id="ccw-2" type="checkbox" /></label>
+		</div>
+		<div class='options'>
+			<div class="ammount" id="amount-3" style="border:0; color:red; font-weight:bold;"></div>
+			<div class="slider" id="slider-3"></div>
+			<label class="ccw-box" for="">clockwise<input onclick="toggleCCW('img3')" id="ccw-3" type="checkbox" /></label>
+		</div>
+		<div class='options'>
+			<div class="ammount" id="amount-4" style="border:0; color:blue; font-weight:bold;"></div>
+			<div class="slider" id="slider-4"></div>
+			<label class="ccw-box" for="">clockwise<input onclick="toggleCCW('img4')" id="ccw-4" type="checkbox" /></label>
+		</div>
+	</fieldset>
+</body>
+</html>
