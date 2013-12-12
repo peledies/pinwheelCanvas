@@ -16,6 +16,6 @@
   ],
   "dependencies": {
     "jquery-ui": "~1.10.3",
-    "hammerjs": "~1.0.5"
+    "jqueryui-touch-punch": "*"
   }
 }
